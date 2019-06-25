@@ -110,15 +110,27 @@ describe("makeRefObj", () => {
 
 describe.only("formatComments", () => {
   it("changes the key names to created_by and belongs_to", () => {
-    const comments = [{
-      article_id: 10, //title
-      title: "title",
-      body: "Who are we kidding, there is only one, and it's Mitch!",
-      topic: 'mitch',
-      author: 'rogersop' 
-    }],
-    const articleRef = {"title": 10}
-    const actual = formatComments(comments, articleRef)
- 
+    const comment = [
+      {
+        body:
+          "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+        belongs_to: "They're not exactly dogs, are they?",
+        created_by: "butter_bridge",
+        votes: 16,
+        created_at: 1511354163389
+      }
+    ];
+    const formattedComments = [
+      {
+        body:
+          "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+        article_id: 1,
+        author: "butter_bridge",
+        votes: 16,
+        created_at: new Date(1511354163389)
+      }
+    ];
+    const articleRef = { "They're not exactly dogs, are they?": 1 };
+    expect(formatComments(comment, articleRef)).to.eql(formattedComments);
   });
 });
