@@ -6,10 +6,23 @@ function fetchArticles({ article_id }) {
     .select("article.*")
     .count({ comment_count: "comments.comment_id" })
     .from("article")
+    .where("article.article_id", "=", article_id)
     .leftJoin("comments", "comments.comment_id", "article.article_id")
-    .groupBy("article.article_id");
+    .groupBy("article.article_id")
+    .then(([article]) => {
+      if (!article) {
+        return Promise.reject({ status: 404, msg: "Article not found" });
+      }
+      return article;
+    });
 }
-module.exports = { fetchArticles };
 
-//404 article not found
-//400 bad req expecting an integer
+function changedVote(article_id, inc_votes) {
+  return connection
+    .increment("votes", inc_votes)
+    .from("article")
+    .where({ article_id })
+    .returning("*");
+}
+
+module.exports = { fetchArticles, changedVote };

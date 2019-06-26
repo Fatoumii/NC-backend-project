@@ -86,7 +86,37 @@ describe("/api", () => {
             );
           });
       });
+      it("status: 404 when passed an article not present", () => {
+        return request
+          .get("/api/articles/100000")
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql("Article not found");
+          });
+      });
+      it("status: 400 when passing a bad request to access an article", () => {
+        return request
+          .get("/api/articles/northcoders")
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql("Bad request");
+          });
+      });
     });
-    //test 405 for articles path
+    describe("PATCH", () => {
+      it("status: 200 which allows us to update the vote", () => {
+        const newData = {
+          inc_votes: 1
+        };
+        return request
+          .patch("/api/articles/1")
+          .send(newData)
+          .expect(200)
+          .then(({ body: { votes } }) => {
+            expect(votes).to.eql(101);
+          });
+      });
+    });
   });
 });
+//test 405 for articles path
