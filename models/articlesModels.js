@@ -1,7 +1,7 @@
 process.env.NODE_ENV = "test";
 const connection = require("../db/connection");
 
-function fetchArticles({ article_id }) {
+function fetchArticlesByID({ article_id }) {
   return connection
     .select("article.*")
     .count({ comment_count: "comments.comment_id" })
@@ -45,9 +45,12 @@ function fetchCommentByID(sort_by, order, article_id) {
     .orderBy(sort_by || "created_at", order || "desc");
 }
 
+function fetchArticles() {}
+
 module.exports = {
-  fetchArticles,
+  fetchArticlesByID,
   changedVote,
   updateComment,
-  fetchCommentByID
+  fetchCommentByID,
+  fetchArticles
 };

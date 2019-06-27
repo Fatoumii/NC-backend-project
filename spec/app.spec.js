@@ -69,7 +69,7 @@ describe("/api", () => {
     });
   });
   describe("/articles", () => {
-    describe("GET", () => {
+    describe("GET articles by ID", () => {
       it("status: 200 which gets an object, including relevant keys", () => {
         return request
           .get("/api/articles/1")
@@ -104,7 +104,7 @@ describe("/api", () => {
           });
       });
     });
-    describe("PATCH", () => {
+    describe("PATCH articles by ID", () => {
       it("status: 200 which allows us to update the vote", () => {
         const newData = {
           inc_votes: 1
@@ -241,6 +241,11 @@ describe("/api", () => {
           .then(({ body: { msg } }) => {
             expect(msg).to.eql("Bad request");
           });
+      });
+    });
+    describe("GET ", () => {
+      it("status: 200 which results in an array of articles with relevant keys", () => {
+        return request.get("/api/articles").expect(200);
       });
     });
   });

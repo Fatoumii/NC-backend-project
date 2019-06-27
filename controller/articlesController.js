@@ -1,12 +1,12 @@
 const {
-  fetchArticles,
+  fetchArticlesByID,
   changedVote,
   updateComment,
   fetchCommentByID
 } = require("../models/articlesModels");
 
-function getArticles(req, res, next) {
-  fetchArticles(req.params)
+function getArticlesById(req, res, next) {
+  fetchArticlesByID(req.params)
     .then(articles => {
       res.status(200).send({ articles });
     })
@@ -46,7 +46,21 @@ function getCommentByID(req, res, next) {
     .catch(next);
 }
 
-module.exports = { getArticles, updateArticles, postComment, getCommentByID };
+function getArticles(req, res, next) {
+  fetchArticles()
+    .then(articles => {
+      res.status(200).send({ msg: "jdj" });
+    })
+    .catch(next);
+}
+
+module.exports = {
+  getArticlesById,
+  updateArticles,
+  postComment,
+  getCommentByID,
+  getArticles
+};
 
 //sort by - references which column to sort
 //order - ASC/DESC
