@@ -2,7 +2,6 @@ process.env.NODE_ENV = "test";
 const connection = require("../db/connection");
 
 function fetchUsers(usernameID) {
-  //{username: butter_bridge}
   return connection
     .select("*")
     .from("users")

@@ -21,8 +21,28 @@ function changedVote(article_id, inc_votes) {
   return connection
     .increment("votes", inc_votes)
     .from("article")
-    .where({ article_id })
+    .where({ article_id }) //why the need to deconstruct again?
     .returning("*");
 }
 
-module.exports = { fetchArticles, changedVote };
+function updateComment(article_id, body, username) {
+  return connection
+    .insert({ author: username, body, article_id })
+    .into("comments")
+    .returning("*")
+    .then(newComment => newComment);
+}
+
+function fetchCommentByID(article_id) {
+  return connection
+    .select("*")
+    .from("comments")
+    .where({ article_id });
+}
+
+module.exports = {
+  fetchArticles,
+  changedVote,
+  updateComment,
+  fetchCommentByID
+};

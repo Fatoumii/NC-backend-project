@@ -5,12 +5,14 @@ const {
   handles500Errors,
   handles404Errors,
   handlesCustomErrors,
-  handlePSQL400Errors
+  handlePSQL400Errors,
+  handles422Errors
 } = require("./errors/index");
 app.use(express.json());
 app.use("/api", apiRouter);
 
 //errors
+app.use(handles422Errors);
 app.use(handlePSQL400Errors);
 app.use(handlesCustomErrors);
 app.all("/*", handles404Errors);

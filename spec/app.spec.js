@@ -116,6 +116,69 @@ describe("/api", () => {
             expect(votes).to.eql(101);
           });
       });
+      it("status: 400 when passing an invalid value", () => {
+        return request
+          .patch("/api/articles/1")
+          .send({ inc_votes: "hi" })
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql("Bad request");
+          });
+      });
+      it("status: 400 when sent more keys than necessary", () => {
+        return request
+          .patch("/api/articles/1")
+          .send({ inc_votes: "cat", name: "Mitch" })
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql("Bad request");
+          });
+      });
+    });
+    describe("POST comments", () => {
+      it("status: 201 returns an object, including relevant keys", () => {
+        const newData = {
+          username: "butter_bridge",
+          body: "Great post!"
+        };
+        return request
+          .post("/api/articles/1/comments")
+          .send(newData)
+          .expect(201)
+          .then(({ body: { newComment } }) => {
+            expect(newComment).to.contain.keys(
+              "comment_id",
+              "article_id",
+              "created_at",
+              "votes",
+              "author",
+              "body"
+            );
+          });
+      });
+      it("status: 422 posted a comment to an invalid article_id", () => {
+        return request
+          .post("/api/articles/1000/comments")
+          .send({ username: "butter_bridge", body: "comment" })
+          .expect(422)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql("Article ID not found");
+          });
+      });
+      it("status: 200 an array of comments for the given id with relevant keys", () => {
+        return request
+          .get("/api/articles/1/comments")
+          .expect(200)
+          .then(({ body: { comment } }) => {
+            expect(comment[0]).to.contain.keys(
+              "comment_id",
+              "votes",
+              "created_at",
+              "author",
+              "body"
+            );
+          });
+      });
     });
   });
 });
