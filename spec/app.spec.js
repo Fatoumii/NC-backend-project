@@ -5,6 +5,7 @@ const { expect } = chai;
 const app = require("../app");
 const request = require("supertest")(app);
 const connection = require("../db/connection");
+chai.use(require("chai-sorted"));
 
 describe("/api", () => {
   beforeEach(() => {
@@ -156,6 +157,22 @@ describe("/api", () => {
             );
           });
       });
+      // it("status: 400 for invalid value", () => {
+      //   return request
+      //     .post("/api/articles/1/comments")
+      //     .send({
+      //       comment_id: 19,
+      //       author: "butter_bridge",
+      //       article_id: 1,
+      //       votes: "zero",
+      //       created_at: "2019-06-27T15:28:27.856Z",
+      //       body: "Great post!"
+      //     })
+      //     .expect(400)
+      //     .then(({ body: { msg } }) => {
+      //       expect(msg).to.eql("Bad request");
+      //     });
+      // });
       it("status: 422 posted a comment to an invalid article_id", () => {
         return request
           .post("/api/articles/1000/comments")
@@ -165,7 +182,9 @@ describe("/api", () => {
             expect(msg).to.eql("Article ID not found");
           });
       });
-      it("status: 200 an array of comments for the given id with relevant keys", () => {
+    });
+    describe("GET comments", () => {
+      it(" status: 200 an array of comments for the given id with relevant keys", () => {
         return request
           .get("/api/articles/1/comments")
           .expect(200)
@@ -179,7 +198,53 @@ describe("/api", () => {
             );
           });
       });
+      it("sorts the comments' created_at column by default ", () => {
+        return request
+          .get("/api/articles/1/comments")
+          .expect(200)
+          .then(({ body: { comment } }) => {
+            expect(comment).to.be.sortedBy("created_at", {
+              descending: true
+            });
+          });
+      });
+      it("can be sorted by any column when passed a valid query", () => {
+        return request
+          .get("/api/articles/1/comments?sort_by=comment_id")
+          .expect(200)
+          .then(({ body: { comment } }) => {
+            expect(comment).to.be.sortedBy("comment_id", {
+              descending: true
+            });
+          });
+      });
+      it("can be sorted by ascending order when passed a query", () => {
+        return request
+          .get("/api/articles/1/comments?order=asc")
+          .expect(200)
+          .then(({ body: { comment } }) => {
+            expect(comment).to.be.ascendingBy("created_at");
+          });
+      });
+      it("status: 400 when passed an invalid query", () => {
+        return request
+          .get("/api/articles/1/comments?sort_by=darlene")
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql("Bad request");
+          });
+      });
+      it("status: 400 when passed an invalid order value", () => {
+        return request
+          .get("/api/articles/1/comments?order=dogs")
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql("Bad request");
+          });
+      });
     });
   });
 });
+
 //test 405 for articles path
+//do errors for .send({}) for post/patch

@@ -8,7 +8,7 @@ exports.handles422Errors = (err, req, res, next) => {
 };
 
 exports.handlePSQL400Errors = (err, req, res, next) => {
-  const codes = ["22P02"];
+  const codes = ["22P02", "42703"];
   if (codes.includes(err.code)) {
     res.status(400).send({ msg: "Bad request" });
   } else {
@@ -19,7 +19,7 @@ exports.handlePSQL400Errors = (err, req, res, next) => {
 exports.handlesCustomErrors = (err, req, res, next) => {
   if (err.status) res.status(err.status).send({ msg: err.msg });
   else next(err);
-}; //not PSQL errors, 404 article not found when passing a number that doesn't exist becauase it could be there
+}; //not PSQL errors, 404 article not found when passing a number that doesn't exist because it could be there
 
 exports.handles500Errors = (err, req, res, next) => {
   res.status(500).send({ msg: "Internal server error" });

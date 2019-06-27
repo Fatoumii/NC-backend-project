@@ -33,11 +33,16 @@ function updateComment(article_id, body, username) {
     .then(newComment => newComment);
 }
 
-function fetchCommentByID(article_id) {
+function fetchCommentByID(sort_by, order, article_id) {
+  const arr = [undefined, "asc", "desc"];
+  if (!arr.includes(order)) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
   return connection
     .select("*")
     .from("comments")
-    .where({ article_id });
+    .where({ article_id })
+    .orderBy(sort_by || "created_at", order || "desc");
 }
 
 module.exports = {

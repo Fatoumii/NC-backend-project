@@ -17,7 +17,7 @@ function updateArticles(req, res, next) {
   if (Object.keys(req.body).length > 1) {
     res.status(400).send({ msg: "Bad request" });
   }
-  const { inc_votes } = req.body; // must deconstructure as it's being fed into increment query which takes a number inc/dec by
+  const { inc_votes } = req.body; // must deconstructure as it's being fed into increment query which takes a number
   const { article_id } = req.params;
   changedVote(article_id, inc_votes)
     .then(([votes]) => {
@@ -37,10 +37,16 @@ function postComment(req, res, next) {
 }
 
 function getCommentByID(req, res, next) {
+  const { sort_by, order } = req.query;
   const { article_id } = req.params;
-  fetchCommentByID(article_id).then(comment => {
-    res.status(200).send({ comment });
-  });
+  fetchCommentByID(sort_by, order, article_id)
+    .then(comment => {
+      res.status(200).send({ comment });
+    })
+    .catch(next);
 }
 
 module.exports = { getArticles, updateArticles, postComment, getCommentByID };
+
+//sort by - references which column to sort
+//order - ASC/DESC
