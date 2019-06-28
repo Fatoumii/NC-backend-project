@@ -48,8 +48,8 @@ function getCommentByID(req, res, next) {
 }
 
 function getArticles(req, res, next) {
-  const { sort_by, order } = req.query;
-  fetchArticles(sort_by, order)
+  const { sort_by, order, author, topic } = req.query;
+  fetchArticles(sort_by, order, author, topic)
     .then(articles => {
       res.status(200).send({ articles: articles });
     })

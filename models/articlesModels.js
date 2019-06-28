@@ -45,7 +45,7 @@ function fetchCommentByID(sort_by, order, article_id) {
     .orderBy(sort_by || "created_at", order || "desc");
 }
 
-function fetchArticles(sort_by, order) {
+function fetchArticles(sort_by, order, author, topic) {
   const arr = [undefined, "asc", "desc"];
   if (!arr.includes(order)) {
     return Promise.reject({ status: 400, msg: "Bad request" });
@@ -56,7 +56,11 @@ function fetchArticles(sort_by, order) {
     .from("article")
     .leftJoin("comments", "comments.comment_id", "article.article_id")
     .groupBy("article.article_id")
-    .orderBy(sort_by || "created_at", order || "desc");
+    .orderBy(sort_by || "created_at", order || "desc")
+    .modify(query => {
+      if (author) query.where("article.author", "=", author);
+      if (topic) query.where("article.topic", "=", topic);
+    });
 }
 
 module.exports = {

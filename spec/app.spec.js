@@ -304,7 +304,22 @@ describe("/api", () => {
             expect(msg).to.eql("Bad request");
           });
       });
-      it("takes an author query which filters the articles by username provided", () => {});
+      it("takes an author query which filters the articles by username provided", () => {
+        return request
+          .get("/api/articles?author=icellusedkars")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles[0].author).to.eql("icellusedkars");
+          });
+      });
+      it("takes an topic query which filters the articles by topic provided", () => {
+        return request
+          .get("/api/articles?topic=cats")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles[0].topic).to.eql("cats");
+          });
+      });
     });
   });
 });
