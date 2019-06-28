@@ -320,27 +320,102 @@ describe("/api", () => {
             expect(articles[0].topic).to.eql("cats");
           });
       });
-      it("status: 400 when passed an invalid author query", () => {
+      // it("status: 400 when passed an invalid author query", () => {
+      //   return request
+      //     .get("/api/articles?author=fatimah")
+      //     .expect(400)
+      //     .then(({ body: { msg } }) => {
+      //       expect(msg).to.eql("Bad request");
+      //     });
+      // });
+      // it("status: 400 when passed an invalid topic query", () => {
+      //   return request
+      //     .get("/api/articles?topic=codewars_")
+      //     .expect(400)
+      //     .then(({ body: { msg } }) => {
+      //       expect(msg).to.eql("Bad request");
+      //     });
+      // });
+      it("status:405 for invalid methods", () => {
+        const invalidMethods = ["put", "delete"];
+        const methodPromises = invalidMethods.map(method => {
+          return request[method]("/api/articles")
+            .expect(405)
+            .then(({ body: { msg } }) => {
+              expect(msg).to.eql("Method not allowed");
+            });
+        });
+        return Promise.all(methodPromises);
+      });
+    });
+  });
+  describe("/comments/:commentID", () => {
+    it("status: 405 for invalid methods", () => {
+      const invalidMethods = ["put", "post"];
+      const methodPromises = invalidMethods.map(method => {
+        return request[method]("/api/comments/1")
+          .expect(405)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql("Method not allowed");
+          });
+      });
+      return Promise.all(methodPromises);
+    });
+    describe("PATCH", () => {
+      it("status: 200 updates the vote depending on commentID", () => {
         return request
-          .get("/api/articles?author=fatimah")
+          .patch("/api/comments/1")
+          .send({ inc_votes: 10 })
+          .expect(200)
+          .then(({ body: { votes } }) => {
+            expect(votes).to.eql(26);
+          });
+      });
+      it("status: 400 when passing an invalid value", () => {
+        return request
+          .patch("/api/comments/1")
+          .send({ inc_votes: "boo" })
           .expect(400)
           .then(({ body: { msg } }) => {
             expect(msg).to.eql("Bad request");
           });
       });
-      it("status: 400 when passed an invalid topic query", () => {
+      it("status: 400 when sent more keys than necessary", () => {
         return request
-          .get("/api/articles?topic=codewars_")
+          .patch("/api/articles/1")
+          .send({ inc_votes: 1, book: "The Great Gatsby" })
           .expect(400)
           .then(({ body: { msg } }) => {
             expect(msg).to.eql("Bad request");
+          });
+      });
+      it("status: 404 when updating a comment by commentID that doesnt exist", () => {
+        return request
+          .patch("/api/comments/1000")
+          .send({ inc_votes: 1 })
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql("Comment not found");
+          });
+      });
+    });
+    describe("DELETE", () => {
+      it("status: 204 removes a comment by commentID", () => {
+        return request.delete("/api/comments/1").expect(204);
+      });
+      it("status: 404 when deleting a comment that doesn't exist", () => {
+        return request
+          .delete("/api/comments/90909")
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql("Comment not found");
           });
       });
     });
   });
 });
 
-//test 405 for articles path
 //do errors for .send({}) for post/patch
-//qeury errors - when passing an integer as author/topic
-//articles id not exist = articles.length=0 reject
+
+//404's invalid id - could exist but not there
+//400 - invalid id, wrong syntax

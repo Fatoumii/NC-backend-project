@@ -6,8 +6,12 @@ const {
   getCommentByID,
   getArticles
 } = require("../controller/articlesController");
+const { handle405Errors } = require("../errors/index");
 
-articlesRouter.route("/").get(getArticles);
+articlesRouter
+  .route("/")
+  .get(getArticles)
+  .all(handle405Errors);
 
 articlesRouter
   .route("/:article_id")

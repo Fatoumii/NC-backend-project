@@ -7,7 +7,7 @@ function fetchArticlesByID({ article_id }) {
     .count({ comment_count: "comments.comment_id" })
     .from("article")
     .where("article.article_id", "=", article_id)
-    .leftJoin("comments", "comments.comment_id", "article.article_id")
+    .leftJoin("comments", "comments.article_id", "article.article_id")
     .groupBy("article.article_id")
     .then(([article]) => {
       if (!article) {
@@ -17,7 +17,7 @@ function fetchArticlesByID({ article_id }) {
     });
 }
 
-function changedVote(article_id, inc_votes) {
+function changedVote(article_id, inc_votes = 0) {
   return connection
     .increment("votes", inc_votes)
     .from("article")
@@ -55,7 +55,7 @@ function fetchArticles(sort_by, order, author, topic) {
     .select("article.*")
     .count({ comment_count: "comments.comment_id" })
     .from("article")
-    .leftJoin("comments", "comments.comment_id", "article.article_id")
+    .leftJoin("comments", "comments.article_id", "article.article_id")
     .groupBy("article.article_id")
     .orderBy(sort_by || "created_at", order || "desc")
     .modify(query => {
@@ -72,9 +72,25 @@ module.exports = {
   fetchArticles
 };
 
-/*
-const arr = ["butter_bridge", "icellusedkars", "rogersop"];
-if (!arr.includes(author)) {
-  return Promise.reject({ status: 400, msg: "Bad request" });
-}
+/* 
+  return connection("users")
+    .select("*")
+    .where("username", "=", author)
+    .then(([user]) => {
+      if (!user) {
+        return Promise.reject({ status: 400, msg: "Bad request" });
+      }
+      return user;
+    })
+    .then(() => {
+      return connection("topics")
+        .select("*")
+        .where("slug", "=", topic)
+        .then(([topic]) => {
+          if (!topic) {
+            return Promise.reject({ status: 400, msg: "Bad request" });
+          }
+          return topic;
+        })
+        .then(topic => {
 */
