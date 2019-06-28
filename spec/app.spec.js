@@ -320,9 +320,27 @@ describe("/api", () => {
             expect(articles[0].topic).to.eql("cats");
           });
       });
+      it("status: 400 when passed an invalid author query", () => {
+        return request
+          .get("/api/articles?author=fatimah")
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql("Bad request");
+          });
+      });
+      it("status: 400 when passed an invalid topic query", () => {
+        return request
+          .get("/api/articles?topic=codewars_")
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql("Bad request");
+          });
+      });
     });
   });
 });
 
 //test 405 for articles path
 //do errors for .send({}) for post/patch
+//qeury errors - when passing an integer as author/topic
+//articles id not exist = articles.length=0 reject
