@@ -157,14 +157,12 @@ describe("/api", () => {
             );
           });
       });
-      // it("status: 400 for invalid value", () => {
+      // it("status: 400 when not including all keys", () => {
       //   return request
       //     .post("/api/articles/1/comments")
       //     .send({
       //       comment_id: 19,
-      //       author: "butter_bridge",
       //       article_id: 1,
-      //       votes: "zero",
       //       created_at: "2019-06-27T15:28:27.856Z",
       //       body: "Great post!"
       //     })
@@ -421,6 +419,10 @@ describe("/api", () => {
 //get - 400 username, invalid syntax
 //get - 404 invalid id
 //PATCH articles by ID - 404 invalid id
+//POST 400*** - ((use `notNullable` in migrations for required columns))
+//another 400 for invalid syntac as values
 //comments
 //patch - 400 invalid, wrong syntax
 //delete - 400 inavlid, wrong syntax
+
+//AUTHOR/TOPIC ERRORS, 404s for all queries
