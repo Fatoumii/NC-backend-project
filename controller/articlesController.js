@@ -2,7 +2,8 @@ const {
   fetchArticlesByID,
   changedVote,
   updateComment,
-  fetchCommentByID
+  fetchCommentByID,
+  fetchArticles
 } = require("../models/articlesModels");
 
 function getArticlesById(req, res, next) {
@@ -47,9 +48,10 @@ function getCommentByID(req, res, next) {
 }
 
 function getArticles(req, res, next) {
-  fetchArticles()
+  const { sort_by, order } = req.query;
+  fetchArticles(sort_by, order)
     .then(articles => {
-      res.status(200).send({ msg: "jdj" });
+      res.status(200).send({ articles: articles });
     })
     .catch(next);
 }

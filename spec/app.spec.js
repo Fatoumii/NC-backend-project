@@ -226,7 +226,7 @@ describe("/api", () => {
             expect(comment).to.be.ascendingBy("created_at");
           });
       });
-      it("status: 400 when passed an invalid query", () => {
+      it("status: 400 when passed an invalid sort_by query", () => {
         return request
           .get("/api/articles/1/comments?sort_by=darlene")
           .expect(400)
@@ -245,8 +245,66 @@ describe("/api", () => {
     });
     describe("GET ", () => {
       it("status: 200 which results in an array of articles with relevant keys", () => {
-        return request.get("/api/articles").expect(200);
+        return request
+          .get("/api/articles")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles[0]).to.contain.keys(
+              "author",
+              "title",
+              "article_id",
+              "topic",
+              "created_at",
+              "votes",
+              "comment_count"
+            );
+          });
       });
+      it("sorts the comments' date column by defualt", () => {
+        return request
+          .get("/api/articles")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles).to.be.sortedBy("created_at", {
+              descending: true
+            });
+          });
+      });
+      it("can be sorted by any column when passed a valid query", () => {
+        return request
+          .get("/api/articles?sort_by=title")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles).to.be.sortedBy("title", {
+              descending: true
+            });
+          });
+      });
+      it("can be sorted by ascending order when passed a valid query", () => {
+        return request
+          .get("/api/articles?order=asc")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles).to.be.ascendingBy("created_at");
+          });
+      });
+      it("status: 400 when passed an invalid sort_by query", () => {
+        return request
+          .get("/api/articles?sort_by=jobs")
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql("Bad request");
+          });
+      });
+      it("status: 400 when passed an invalid order query", () => {
+        return request
+          .get("/api/articles?order=cats")
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql("Bad request");
+          });
+      });
+      it("takes an author query which filters the articles by username provided", () => {});
     });
   });
 });

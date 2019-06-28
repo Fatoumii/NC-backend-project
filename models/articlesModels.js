@@ -21,7 +21,7 @@ function changedVote(article_id, inc_votes) {
   return connection
     .increment("votes", inc_votes)
     .from("article")
-    .where({ article_id }) //why the need to deconstruct again?
+    .where({ article_id })
     .returning("*");
 }
 
@@ -45,7 +45,19 @@ function fetchCommentByID(sort_by, order, article_id) {
     .orderBy(sort_by || "created_at", order || "desc");
 }
 
-function fetchArticles() {}
+function fetchArticles(sort_by, order) {
+  const arr = [undefined, "asc", "desc"];
+  if (!arr.includes(order)) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
+  return connection("article")
+    .select("article.*")
+    .count({ comment_count: "comments.comment_id" })
+    .from("article")
+    .leftJoin("comments", "comments.comment_id", "article.article_id")
+    .groupBy("article.article_id")
+    .orderBy(sort_by || "created_at", order || "desc");
+}
 
 module.exports = {
   fetchArticlesByID,
