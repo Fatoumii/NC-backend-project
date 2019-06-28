@@ -417,5 +417,10 @@ describe("/api", () => {
 
 //do errors for .send({}) for post/patch
 
-//404's invalid id - could exist but not there
-//400 - invalid id, wrong syntax
+//users
+//get - 400 username, invalid syntax
+//get - 404 invalid id
+//PATCH articles by ID - 404 invalid id
+//comments
+//patch - 400 invalid, wrong syntax
+//delete - 400 inavlid, wrong syntax
