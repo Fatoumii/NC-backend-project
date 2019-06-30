@@ -1,14 +1,14 @@
 exports.handles422Errors = (err, req, res, next) => {
   const codes = ["23503"];
   if (codes.includes(err.code)) {
-    res.status(422).send({ msg: "Article ID not found" });
+    res.status(422).send({ msg: "Invalid request" });
   } else {
     next(err);
   }
 };
 
 exports.handlePSQL400Errors = (err, req, res, next) => {
-  const codes = ["22P02", "42703"];
+  const codes = ["22P02", "42703", "23502"];
   if (codes.includes(err.code)) {
     res.status(400).send({ msg: "Bad request" });
   } else {

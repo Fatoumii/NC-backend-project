@@ -29,6 +29,7 @@ describe("/api", () => {
           .get("/api/topics")
           .expect(200)
           .then(({ body: { topics } }) => {
+            console.log(topics);
             expect(topics[0]).to.contain.keys("slug", "description");
           });
       });
@@ -171,8 +172,8 @@ describe("/api", () => {
           .post("/api/articles/1/comments")
           .send(newData)
           .expect(201)
-          .then(({ body: { newComment } }) => {
-            expect(newComment).to.contain.keys(
+          .then(({ body: { comment } }) => {
+            expect(comment[0]).to.contain.keys(
               "comment_id",
               "article_id",
               "created_at",
@@ -182,36 +183,45 @@ describe("/api", () => {
             );
           });
       });
-      // it("status: 400 when not including all keys", () => {
-      //   return request
-      //     .post("/api/articles/1/comments")
-      //     .send({
-      //       comment_id: 19,
-      //       article_id: 1,
-      //       created_at: "2019-06-27T15:28:27.856Z",
-      //       body: "Great post!"
-      //     })
-      //     .expect(400)
-      //     .then(({ body: { msg } }) => {
-      //       expect(msg).to.eql("Bad request");
-      //     });
-      // });
       it("status: 422 posted a comment to an invalid article_id", () => {
         return request
           .post("/api/articles/1000/comments")
           .send({ username: "butter_bridge", body: "comment" })
           .expect(422)
           .then(({ body: { msg } }) => {
-            expect(msg).to.eql("Article ID not found");
+            expect(msg).to.eql("Invalid request");
           });
       });
-      it("status: 400 when posting with invalid keys", () => {
+      it("status: 400 when passing an empty object to post", () => {
         return request
-          .post("/api/articles/2")
-          .send({ username: 123, body: 123 })
+          .post("/api/articles/1/comments")
+          .send({})
           .expect(400)
           .then(({ body: { msg } }) => {
             expect(msg).to.eql("Bad request");
+          });
+      });
+      it("status: 400 when not including all keys", () => {
+        return request
+          .post("/api/articles/1/comments")
+          .send({
+            comment_id: 19,
+            article_id: 1,
+            created_at: "2019-06-27T15:28:27.856Z",
+            body: "Great post!"
+          })
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql("Bad request");
+          });
+      });
+      it("status: 422 when posting with invalid keys", () => {
+        return request
+          .post("/api/articles/1/comments")
+          .send({ username: 123, body: 123 })
+          .expect(422)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql("Invalid request");
           });
       });
     });
@@ -430,6 +440,24 @@ describe("/api", () => {
             expect(msg).to.eql("Comment not found");
           });
       });
+      it("status: 400 when passed invalid values", () => {
+        return request
+          .patch("/api/comments/1")
+          .send({ inc_votes: "ten" })
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql("Bad request");
+          });
+      });
+      it("status: 400 when posting an empty object", () => {
+        return request
+          .patch("/api/comments/1")
+          .send({})
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql("Bad request");
+          });
+      });
     });
     describe("DELETE", () => {
       it("status: 204 removes a comment by commentID", () => {
@@ -443,24 +471,16 @@ describe("/api", () => {
             expect(msg).to.eql("Comment not found");
           });
       });
+      it("status: 400 when deleting a comment by invalid ID - wrong syntax", () => {
+        return request
+          .delete("/api/comments/northcoders")
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql("Bad request");
+          });
+      });
     });
   });
 });
 
-/*do errors for .send({}) for post/patch
-
-POST 400*** - ((use `notNullable` in migrations for required columns))
-another 400 for invalid syntac as values
-comments
-patch - 400 invalid, wrong syntax
-delete - 400 inavlid, wrong syntax
-
-
-
-AUTHOR/TOPIC ERRORS, 404s for all queries
-
-change all 400s to "INVALID SYNTAX"
-
-
-
-*/
+//AUTHOR/TOPIC ERRORS, 404s for all queries

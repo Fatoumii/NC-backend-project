@@ -9,6 +9,7 @@ const {
 function getArticlesById(req, res, next) {
   fetchArticlesByID(req.params)
     .then(article => {
+      console.log(article);
       res.status(200).send({ article });
     })
     .catch(next);
@@ -31,8 +32,8 @@ function postComment(req, res, next) {
   const { article_id } = req.params;
   const { body, username } = req.body;
   updateComment(article_id, body, username)
-    .then(([newComment]) => {
-      res.status(201).send({ newComment });
+    .then(comment => {
+      res.status(201).send({ comment });
     })
     .catch(next);
 }
