@@ -30,7 +30,7 @@ function updateComment(article_id, body, username) {
     .insert({ author: username, body, article_id })
     .into("comments")
     .returning("*")
-    .then(newComment => newComment);
+    .then(([newComment]) => newComment);
 }
 
 function fetchCommentByID(sort_by, order, article_id) {

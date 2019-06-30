@@ -29,7 +29,6 @@ describe("/api", () => {
           .get("/api/topics")
           .expect(200)
           .then(({ body: { topics } }) => {
-            console.log(topics);
             expect(topics[0]).to.contain.keys("slug", "description");
           });
       });
@@ -164,16 +163,15 @@ describe("/api", () => {
     });
     describe("POST comments", () => {
       it("status: 201 returns an object, including relevant keys", () => {
-        const newData = {
-          username: "butter_bridge",
-          body: "Great post!"
-        };
         return request
           .post("/api/articles/1/comments")
-          .send(newData)
+          .send({
+            username: "butter_bridge",
+            body: "Great post!"
+          })
           .expect(201)
           .then(({ body: { comment } }) => {
-            expect(comment[0]).to.contain.keys(
+            expect(comment).to.contain.keys(
               "comment_id",
               "article_id",
               "created_at",
@@ -282,6 +280,14 @@ describe("/api", () => {
           .expect(400)
           .then(({ body: { msg } }) => {
             expect(msg).to.eql("Bad request");
+          });
+      });
+      it("results in an empty array when the article exists but has no commments", () => {
+        return request
+          .get("/api/articles/3/comments")
+          .expect(200)
+          .then(({ body: { comment } }) => {
+            expect(comment).to.eql([]);
           });
       });
     });
