@@ -378,7 +378,7 @@ describe("/api", () => {
       // });
       // it("status: 400 when passed an invalid topic query", () => {
       //   return request
-      //     .get("/api/articles?topic=codewars_")
+      //     .get("/api/articles?topic=codewars")
       //     .expect(400)
       //     .then(({ body: { msg } }) => {
       //       expect(msg).to.eql("Bad request");
@@ -488,5 +488,3 @@ describe("/api", () => {
     });
   });
 });
-
-//AUTHOR/TOPIC ERRORS, 404s for all queries

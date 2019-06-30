@@ -50,6 +50,26 @@ function fetchArticles(sort_by, order, author, topic) {
   if (!arr.includes(order)) {
     return Promise.reject({ status: 400, msg: "Bad request" });
   }
+  // return connection
+  //   .select("*")
+  //   .from("users")
+  //   .where("username", "=", author)
+  //   .then(user => {
+  //     if (user.length === 0)
+  //       return (
+  //         Promise.reject({ status: 400, msg: "Bad request" })
+  // })
+  // .then(() => {
+  //   return connection
+  //     .select("*")
+  //     .from("topics")
+  //     .where("slug", "=", topic)
+  //     .then(topic => {
+  //       console.log(topic);
+  //       if (topic.length < 1)
+  //         return Promise.reject({ status: 400, msg: "Bad request" });
+  //     })
+  // .then(() => {
   return connection("article")
     .select("article.*")
     .count({ comment_count: "comments.comment_id" })
@@ -70,26 +90,3 @@ module.exports = {
   fetchCommentByID,
   fetchArticles
 };
-
-/* 
-  return connection("users")
-    .select("*")
-    .where("username", "=", author)
-    .then(([user]) => {
-      if (!user) {
-        return Promise.reject({ status: 400, msg: "Bad request" });
-      }
-      return user;
-    })
-    .then(() => {
-      return connection("topics")
-        .select("*")
-        .where("slug", "=", topic)
-        .then(([topic]) => {
-          if (!topic) {
-            return Promise.reject({ status: 400, msg: "Bad request" });
-          }
-          return topic;
-        })
-        .then(topic => {
-*/
