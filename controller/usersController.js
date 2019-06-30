@@ -1,9 +1,9 @@
 const { fetchUsers } = require("../models/usersModels");
 
 function getUsers(req, res, next) {
-  fetchUsers(req.params)
+  const { username } = req.params;
+  fetchUsers(username)
     .then(([userObj]) => {
-      //destructured arr
       res.status(200).send({ user: userObj });
     })
     .catch(next);

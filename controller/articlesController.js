@@ -8,8 +8,8 @@ const {
 
 function getArticlesById(req, res, next) {
   fetchArticlesByID(req.params)
-    .then(articles => {
-      res.status(200).send({ articles });
+    .then(article => {
+      res.status(200).send({ article });
     })
     .catch(next);
 }
@@ -18,11 +18,11 @@ function updateArticles(req, res, next) {
   if (Object.keys(req.body).length > 1) {
     res.status(400).send({ msg: "Bad request" });
   }
-  const { inc_votes } = req.body; // must deconstructure as it's being fed into increment query which takes a number
+  const { inc_votes } = req.body;
   const { article_id } = req.params;
   changedVote(article_id, inc_votes)
-    .then(([votes]) => {
-      res.status(200).send(votes);
+    .then(([article]) => {
+      res.status(200).send(article);
     })
     .catch(next);
 }

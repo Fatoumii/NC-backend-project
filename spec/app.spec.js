@@ -49,7 +49,7 @@ describe("/api", () => {
     describe("GET", () => {
       it("status: 200, which allows us to access a user object by a username", () => {
         return request
-          .get("/api/users/butter_bridge")
+          .get("/api/users/rogersop")
           .expect(200)
           .then(({ body: { user } }) => {
             expect(user).to.contain.keys("username", "avatar_url", "name");
@@ -66,6 +66,22 @@ describe("/api", () => {
         });
         return Promise.all(methodPromises);
       });
+      it("status: 404 when passing an invalid username", () => {
+        return request
+          .get("/api/users/fatimah")
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql("User not found");
+          });
+      });
+      it("status: 404 when passing a username with an invalid syntax", () => {
+        return request
+          .get("/api/users/123")
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql("User not found");
+          });
+      });
     });
   });
   describe("/articles", () => {
@@ -74,8 +90,8 @@ describe("/api", () => {
         return request
           .get("/api/articles/1")
           .expect(200)
-          .then(({ body: { articles } }) => {
-            expect(articles).to.contain.keys(
+          .then(({ body: { article } }) => {
+            expect(article).to.contain.keys(
               "author",
               "title",
               "article_id",
@@ -135,6 +151,15 @@ describe("/api", () => {
             expect(msg).to.eql("Bad request");
           });
       });
+      it("status: 200 when sent a body with no inc_votes property", () => {
+        return request
+          .patch("/api/articles/1")
+          .expect(200)
+          .send({})
+          .then(({ body: { votes } }) => {
+            expect(votes).to.eql(100);
+          });
+      });
     });
     describe("POST comments", () => {
       it("status: 201 returns an object, including relevant keys", () => {
@@ -178,6 +203,15 @@ describe("/api", () => {
           .expect(422)
           .then(({ body: { msg } }) => {
             expect(msg).to.eql("Article ID not found");
+          });
+      });
+      it("status: 400 when posting with invalid keys", () => {
+        return request
+          .post("/api/articles/2")
+          .send({ username: 123, body: 123 })
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql("Bad request");
           });
       });
     });
@@ -413,16 +447,20 @@ describe("/api", () => {
   });
 });
 
-//do errors for .send({}) for post/patch
+/*do errors for .send({}) for post/patch
 
-//users
-//get - 400 username, invalid syntax
-//get - 404 invalid id
-//PATCH articles by ID - 404 invalid id
-//POST 400*** - ((use `notNullable` in migrations for required columns))
-//another 400 for invalid syntac as values
-//comments
-//patch - 400 invalid, wrong syntax
-//delete - 400 inavlid, wrong syntax
+POST 400*** - ((use `notNullable` in migrations for required columns))
+another 400 for invalid syntac as values
+comments
+patch - 400 invalid, wrong syntax
+delete - 400 inavlid, wrong syntax
 
-//AUTHOR/TOPIC ERRORS, 404s for all queries
+
+
+AUTHOR/TOPIC ERRORS, 404s for all queries
+
+change all 400s to "INVALID SYNTAX"
+
+
+
+*/

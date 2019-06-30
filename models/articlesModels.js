@@ -50,7 +50,6 @@ function fetchArticles(sort_by, order, author, topic) {
   if (!arr.includes(order)) {
     return Promise.reject({ status: 400, msg: "Bad request" });
   }
-
   return connection("article")
     .select("article.*")
     .count({ comment_count: "comments.comment_id" })
