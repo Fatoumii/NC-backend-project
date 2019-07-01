@@ -352,7 +352,7 @@ describe("/api", () => {
             expect(msg).to.eql("Bad request");
           });
       });
-      it("takes an author query which filters the articles by username provided", () => {
+      it("status: 200 which takes an author query which filters the articles by username provided", () => {
         return request
           .get("/api/articles?author=icellusedkars")
           .expect(200)
@@ -360,30 +360,30 @@ describe("/api", () => {
             expect(articles[0].author).to.eql("icellusedkars");
           });
       });
-      it("takes an topic query which filters the articles by topic provided", () => {
+      it("status: 200 which takes a topic query which filters the articles by topic provided", () => {
         return request
-          .get("/api/articles?topic=cats")
+          .get("/api/articles?topic=mitch")
           .expect(200)
           .then(({ body: { articles } }) => {
-            expect(articles[0].topic).to.eql("cats");
+            expect(articles[0].topic).to.eql("mitch");
           });
       });
-      // it("status: 400 when passed an invalid author query", () => {
-      //   return request
-      //     .get("/api/articles?author=fatimah")
-      //     .expect(400)
-      //     .then(({ body: { msg } }) => {
-      //       expect(msg).to.eql("Bad request");
-      //     });
-      // });
-      // it("status: 400 when passed an invalid topic query", () => {
-      //   return request
-      //     .get("/api/articles?topic=codewars")
-      //     .expect(400)
-      //     .then(({ body: { msg } }) => {
-      //       expect(msg).to.eql("Bad request");
-      //     });
-      // });
+      it("status: 400 when passed an invalid author query", () => {
+        return request
+          .get("/api/articles?author=fatimah")
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql("Bad request");
+          });
+      });
+      it("status: 400 when passed an invalid topic query", () => {
+        return request
+          .get("/api/articles?topic=codewars")
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql("Bad request");
+          });
+      });
       it("status:405 for invalid methods", () => {
         const invalidMethods = ["put", "delete"];
         const methodPromises = invalidMethods.map(method => {
