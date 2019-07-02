@@ -4,8 +4,8 @@ function updateComment(req, res, next) {
   const { comment_id } = req.params;
   const { inc_votes } = req.body;
   changeVotes(comment_id, inc_votes)
-    .then(([votes]) => {
-      res.status(200).send(votes);
+    .then(([comments]) => {
+      res.status(200).send(comments);
     })
     .catch(next);
 }
