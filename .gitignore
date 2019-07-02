@@ -1,4 +1,3 @@
 node_modules
-knexfile.js
 test.sql
 output.txt
