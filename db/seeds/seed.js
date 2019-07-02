@@ -24,7 +24,7 @@ exports.seed = function(knex, Promise) {
       return Promise.all([topicInsertions, userInsertions]);
     })
 
-    .then(() => {
+    .then(([topics, users]) => {
       const changedTimestamp = formatDate(articleData);
       return knex("article")
         .insert(changedTimestamp)
@@ -34,6 +34,7 @@ exports.seed = function(knex, Promise) {
       const articleRef = makeRefObj(articleRows, "title", "article_id");
 
       const formattedComments = formatComments(commentData, articleRef);
+
       return knex("comments").insert(formattedComments);
     });
 };

@@ -6,15 +6,9 @@ exports.up = function(knex, Promise) {
       .references("users.username")
       .notNullable();
     commentTable.integer("article_id").references("article.article_id");
-    commentTable
-      .integer("votes")
-      .defaultTo(0)
-      .notNullable();
-    commentTable
-      .timestamp("created_at")
-      .defaultTo(knex.fn.now())
-      .notNullable();
-    commentTable.string("body").notNullable();
+    commentTable.integer("votes").defaultTo(0);
+    commentTable.timestamp("created_at").defaultTo(knex.fn.now());
+    commentTable.text("body").notNullable();
   });
 };
 
