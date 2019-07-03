@@ -1,4 +1,3 @@
-process.env.NODE_ENV = "test";
 const connection = require("../db/connection");
 
 function changeVotes(comment_id, inc_votes = 0) {

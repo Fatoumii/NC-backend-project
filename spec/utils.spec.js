@@ -1,4 +1,4 @@
-process.env.NODE_ENV = "test";
+.NODE_ENV = "test";
 
 const { expect } = require("chai");
 const { formatDate, makeRefObj, formatComments } = require("../db/utils/utils");
