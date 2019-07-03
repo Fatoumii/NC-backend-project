@@ -13,3 +13,4 @@ const dbConfig =
     : require("../knexfile");
 
 module.exports = knex(dbConfig);
+console.log(dbConfig);
