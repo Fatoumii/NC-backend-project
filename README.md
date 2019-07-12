@@ -31,16 +31,7 @@ At this point, start the server by running the script 'npm start'. This will ens
 
 Deployment
 
-This project can also be accessed using Heroku: https://fatoumi-backend.herokuapp.com/
-
-Built With
-
-Express - https://expressjs.com/
-
-Knex - https://knexjs.org/
-
-Postgress - https://www.postgresql.org/
-
+This project can also be accessed here: https://fatoumi-backend.herokuapp.com/
 
 Author
 
