@@ -6,9 +6,7 @@ Getting Started
 
 The following points will allow you to get this project running on your local machine for development and testing purposes.
 
-Prerequisites
-
-Below are a number of packages you will need to install in order to run this project:
+Clone this repository with command 'git clone https://github.com/Fatoumii/NC-backend-project.git'. Navigate into this file and install all the necessary dependencies by running 'npm i'. The dependencies are listed below or you can take a look at them in 'package.json'.
 
 Express - https://expressjs.com/
 
@@ -28,12 +26,8 @@ Nodemon - https://nodemon.io/
 
 Supertest - https://www.npmjs.com/package/supertest
 
-To install all necessary dependencies, run 'npm install'
 
-
-Installing
-
-To get the development environment running, run 'npm start'. At this point, Insomnia will connect to the server.
+At this point, start the server by running the script 'npm start'. This will ensure the databse is constantly listening for requests.
 
 Deployment
 
