@@ -42,8 +42,11 @@ This project can also be accessed using Heroku: https://fatoumi-backend.herokua
 Built With
 
 Express - https://expressjs.com/
+
 Knex - https://knexjs.org/
+
 Postgress - https://www.postgresql.org/
+
 
 Author
 
