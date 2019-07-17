@@ -4,8 +4,6 @@ function changeVotes(comment_id, inc_votes = 0) {
   if (inc_votes === 0) {
     return Promise.reject({ status: 400, msg: "Bad request" });
   }
-  if (comment_id > comment_id.length)
-    return Promise.reject({ status: 404, msg: "Comment not found" });
 
   return connection
     .increment("votes", inc_votes)
