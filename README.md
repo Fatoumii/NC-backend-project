@@ -6,7 +6,7 @@ A backend project allowing developers to access data via RESTful API endpoints u
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-Clone this repository with command 'git clone https://github.com/Fatoumii/NC-backend-project.git'. Navigate into this file and install all the necessary dependencies by running *'npm i'*. The dependencies are listed below or you can take a look at them in the *'package.json'* file.
+Clone this repository with command *`git clone https://github.com/Fatoumii/NC-backend-project.git`*. Navigate into this file and install all the necessary dependencies by running *`npm i`*. The dependencies are listed below or you can take a look at them in the *`package.json`* file.
 ```
  Express - https://expressjs.com/
 
