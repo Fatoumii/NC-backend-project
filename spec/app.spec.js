@@ -1,3 +1,4 @@
+process.env.NODE_ENV = "test";
 const chai = require("chai");
 const { expect } = chai;
 const app = require("../app");
@@ -433,15 +434,6 @@ describe("/api", () => {
           .expect(400)
           .then(({ body: { msg } }) => {
             expect(msg).to.eql("Bad request");
-          });
-      });
-      it("status: 404 when updating a comment by commentID that doesnt exist", () => {
-        return request
-          .patch("/api/comments/1000")
-          .send({ inc_votes: 1 })
-          .expect(404)
-          .then(({ body: { msg } }) => {
-            expect(msg).to.eql("Comment not found");
           });
       });
       it("status: 400 when passed invalid values", () => {
